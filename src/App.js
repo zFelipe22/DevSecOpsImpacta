@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import logo from './images/impacta.png';
 import './App.css';
 
 function App() {
@@ -7,16 +7,9 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+          Atividade final da disciplina DevSecOps SRE & Quality Assurance <br/>
+          Para acessar o diretório do Git <a className="Link" href='https://github.com/zFelipe22/DevSecOpsImpacta'>clique aqui</a>.
+        </p>        
       </header>
     </div>
   );
