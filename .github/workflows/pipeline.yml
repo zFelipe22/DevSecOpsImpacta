@@ -1,7 +1,7 @@
 name: Pipeline Atividade Final DevSecOps
 
 on:
-  push:
+  push: # Escolhido esse modo pois estava usando GitHub Desktop, dessa forma, a cada push de modificação do código, efetuaria a analise do Pipeline
     branches:
       - main
 
@@ -9,6 +9,9 @@ permissions:
   contents: write
 
 jobs:
+
+  # Atenção Fabiano! 
+  # Job referente a analise do código de acordo com a própria analise via NPM do Node 
   code-analysis:
     runs-on: ubuntu-latest
 
@@ -27,49 +30,31 @@ jobs:
       - name: Rodar testes unitários
         run: npm test -- --watchAll=false
 
-      - name: ESLint (análise de código)
-        run: npx eslint . --ext .js,.jsx,.ts,.tsx || true
+      - name: Analise por Extencao de Arquivo
+        run: npx eslint . --ext .js,.jsx || true
 
-  build:
-    runs-on: ubuntu-latest
-    needs: code-analysis
+  # Atenção Fabiano!
+  # Unificado em um apenas para facilitar a verificação e Deploy da Aplicação, estava enfrentando erros na execução
+  build-and-deploy:
+    runs-on: ubuntu-latest 
+    needs: code-analysis #Fabiano, aprendi essa questão para exigir que o passo anterior seja 100% concluido para sim seguir para esse!
 
     steps:
-      - name: Checkout do código
+      - name: Verificação do código
         uses: actions/checkout@v3
 
-      - name: Configurar Node.js
+      - name: Configurar Node 
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Instalar dependências
+      - name: Instalar dependências do Node
         run: npm install
 
       - name: Build da aplicação
         run: npm run build
 
-      - name: Upload do build
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: build
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
-
-      - name: Download do build
-        uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: build
-
-      - name: Deploy para o GitHub Pages
+      - name: Deploy para poder acessar pelo GihHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
